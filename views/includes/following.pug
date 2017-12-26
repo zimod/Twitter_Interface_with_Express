@@ -1,0 +1,14 @@
+.grid-33
+  .app--section
+    ul.app--user--list
+      each val in recentFriends
+        li
+          .circle--fluid
+            .circle--fluid--cell.circle--fluid--primary
+              a.app--tweet--author
+                .app--avatar(style= `background-image: url(${val.friendProfileIMG})`)
+                  img(src=`${val.friendProfileIMG}`)
+                h4= `${val.friendName}`
+                p= `@${val.friendScreenName}`
+            .circle--fluid--cell
+              a.button.button-text Unfollow
