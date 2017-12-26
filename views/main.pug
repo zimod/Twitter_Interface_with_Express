@@ -3,4 +3,20 @@ extends layout.pug
 block main
   include includes/header.pug
   include includes/tweet.pug
-  include includes/appBody.pug
+  .bounds.app--body
+    .app--section--header
+      .grid-33
+        .app--section--heading
+          h2 Timeline
+      .grid-33
+        .app--section--heading
+          strong= following_count
+          h2 Following
+      .grid-33
+        .app--section--heading
+          h2 Direct Messages 
+    include includes/timeline.pug
+  //include includes/following.pug
+  //include includes/directMsg.pug
+  
+  
