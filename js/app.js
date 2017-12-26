@@ -6,9 +6,8 @@ const moment = require('moment');//use the moment package to display time
 
 const app = express();
 moment().format();
-const time = moment('Tue Dec 26 04:30:00 +0000 2017','ddd MMM DD HH:mm:ss Z YYYY');
-console.log(time);
-console.log(time.fromNow());
+
+
 
 const T = new Twit({
   consumer_key: key.consumer_key,
@@ -60,6 +59,7 @@ app.get('/', (req, res) => {
       username: template.user.name,
       screen_name: template.user.screen_name,
       profile_image_url: template.user.profile_image_url_https,
+      profile_background_url: template.user.profile_banner_url,
       following_count: template.user.friends_count,
       recentTweets: template.recentTweets,
       recentFriends: template.recentFriends,
