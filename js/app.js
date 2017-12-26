@@ -2,7 +2,7 @@ const key = require('./config.js'); //require the Auth tokens
 const express = require('express'); //require express module
 const bodyParser = require('body-parser'); //using the middleware for req.body, this is for the POST method
 const Twit = require('twit'); //require Twit
-const moment = require('moment');//use the moment package to display time
+const moment = require('moment'); //use the moment package to display time
 
 const app = express();
 moment().format();
@@ -72,11 +72,24 @@ app.get('/', (req, res) => {
 app.post('/new', (req, res) => {
   T.post('statuses/update', { //check out https://github.com/ttezel/twit
     status: req.body.userinput
-  }).then(function(result){
-     res.redirect('/');
+  }).then(function(result) {
+    res.redirect('/');
   });
 });
 
+//Custom Error Handlers
+app.use((req, res, next) => {
+  const err = new Error('Opps, this is not a valid page!');
+  err.status = 404;
+  next(err); //any request that makes it this far will trigger this function, meaning still cant find the req url
+});
+
+app.use((err, req, res, next) => { //the err object has properties that holds data about the error
+  res.status(err.status);
+  res.render('error', {
+    err: err
+  }); //render a template back to client
+});
 
 const getAllData = (result, item1, item2, item3, item4) => { //helper function to retrieve all needed data and store them in the result object
   result.user = item1.data;
@@ -92,7 +105,7 @@ const getRecentTweets = (result, data) => { // a helper function to grab recent 
       TweetText: item.text,
       Retweet: item.retweet_count,
       Like: item.favorite_count,
-      CreatedAt: moment(item.created_at,'ddd MMM DD HH:mm:ss Z YYYY').fromNow()
+      CreatedAt: moment(item.created_at, 'ddd MMM DD HH:mm:ss Z YYYY').fromNow()
     });
   });
   //console.log(result.recentTweets);
@@ -115,7 +128,7 @@ const getRecentDirectMsg = (result, data) => { // a helper function to grab rece
   data.forEach(function(item) { //checkout https://developer.twitter.com/en/docs/direct-messages/sending-and-receiving/api-reference/get-messages
     result.recentDirectMsg.push({
       recipientName: item.sender.name,
-      createdAt: moment(item.created_at,'ddd MMM DD HH:mm:ss Z YYYY').fromNow(),
+      createdAt: moment(item.created_at, 'ddd MMM DD HH:mm:ss Z YYYY').fromNow(),
       message: item.text,
       recipientProfileImg: item.sender.profile_image_url_https
     });
