@@ -2,8 +2,13 @@ const key = require('./config.js'); //require the Auth tokens
 const express = require('express'); //require express module
 const bodyParser = require('body-parser'); //using the middleware for req.body, this is for the POST method
 const Twit = require('twit'); //require Twit
+const moment = require('moment');//use the moment package to display time
 
 const app = express();
+moment().format();
+const time = moment('Tue Dec 26 04:30:00 +0000 2017','ddd MMM DD HH:mm:ss Z YYYY');
+console.log(time);
+console.log(time.fromNow());
 
 const T = new Twit({
   consumer_key: key.consumer_key,
@@ -13,7 +18,7 @@ const T = new Twit({
   timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
 })
 
-app.use(bodyParser.urlencoded({
+app.use(bodyParser.urlencoded({ //use body parser for POST req.body
   extended: false
 }));
 
@@ -65,7 +70,7 @@ app.get('/', (req, res) => {
 
 //POST
 app.post('/new', (req, res) => {
-  T.post('statuses/update', {
+  T.post('statuses/update', { //check out https://github.com/ttezel/twit
     status: req.body.userinput
   }).then(function(result){
      res.redirect('/');
@@ -87,7 +92,7 @@ const getRecentTweets = (result, data) => { // a helper function to grab recent 
       TweetText: item.text,
       Retweet: item.retweet_count,
       Like: item.favorite_count,
-      CreatedAt: item.created_at
+      CreatedAt: moment(item.created_at,'ddd MMM DD HH:mm:ss Z YYYY').fromNow()
     });
   });
   //console.log(result.recentTweets);
@@ -110,7 +115,7 @@ const getRecentDirectMsg = (result, data) => { // a helper function to grab rece
   data.forEach(function(item) { //checkout https://developer.twitter.com/en/docs/direct-messages/sending-and-receiving/api-reference/get-messages
     result.recentDirectMsg.push({
       recipientName: item.sender.name,
-      createdAt: item.created_at,
+      createdAt: moment(item.created_at,'ddd MMM DD HH:mm:ss Z YYYY').fromNow(),
       message: item.text,
       recipientProfileImg: item.sender.profile_image_url_https
     });
