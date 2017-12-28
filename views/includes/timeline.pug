@@ -2,12 +2,12 @@
   .app--section
     ul.app--tweet--list
       each val in recentTweets
-        li
+        li.app--tweet--li
           strong.app--tweet--timestamp= val.CreatedAt
           a.app--tweet--author
             .app--avatar(style= `background-image: url(${profile_image_url})`)
-              img(src=`${profile_image_url}`)
-            h4= username
+              img(class = "avatar-url" src=`${profile_image_url}`)
+            h4(class = "avatar--name")= username
             |  @#{screen_name}     
           p= val.TweetText
           ul.app--tweet--actions.circle--list--inline

@@ -5,7 +5,7 @@ const Twit = require('twit'); //require Twit
 const moment = require('moment'); //use the moment package to display time
 const app = express();
 const http = require('http').Server(app); //create the http server
-const io = require('socket.io')(http);//The require('socket.io')(http) creates a new socket.io instance attached to the http server.
+const io = require('socket.io')(http); //The require('socket.io')(http) creates a new socket.io instance attached to the http server.
 moment().format();
 
 
@@ -69,7 +69,8 @@ app.get('/', (req, res) => {
   });
 });
 
-//POST
+//POST IMPORTANT: this is not real time, meaning using app.post the page needs to be refreshed to see the post content.
+// Use socket.io for real time communication,
 app.post('/new', (req, res) => {
   T.post('statuses/update', { //check out https://github.com/ttezel/twit
     status: req.body.userinput
@@ -92,16 +93,23 @@ app.use((err, req, res, next) => { //the err object has properties that holds da
   }); //render a template back to client
 });
 
-//Socket.io
-//Whenever someone connects this gets executed
-io.on('connection', function(socket) {
-   console.log('A user connected');
-
-   //Whenever someone disconnects this piece of code executed
-   socket.on('disconnect', function () {
-      console.log('A user disconnected');
-   });
-});
+// Socket.io
+// Whenever someone connects this gets executed
+// io.on('connection', function(socket) {
+//   console.log('A user connected');
+//
+//   socket.on('submit_tweet', function(tweet) {
+//     T.post('statuses/update', {
+//       status: tweet
+//     });
+//     io.emit('submit_tweet', tweet);
+//   });
+//
+//   //Whenever someone disconnects this piece of code executed
+//   socket.on('disconnect', function() {
+//     console.log('A user disconnected');
+//   });
+// });
 
 const getAllData = (result, item1, item2, item3, item4) => { //helper function to retrieve all needed data and store them in the result object
   result.user = item1.data;
