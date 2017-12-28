@@ -3,8 +3,9 @@ const express = require('express'); //require express module
 const bodyParser = require('body-parser'); //using the middleware for req.body, this is for the POST method
 const Twit = require('twit'); //require Twit
 const moment = require('moment'); //use the moment package to display time
-
 const app = express();
+const http = require('http').Server(app); //create the http server
+const io = require('socket.io')(http);//The require('socket.io')(http) creates a new socket.io instance attached to the http server.
 moment().format();
 
 
@@ -91,6 +92,17 @@ app.use((err, req, res, next) => { //the err object has properties that holds da
   }); //render a template back to client
 });
 
+//Socket.io
+//Whenever someone connects this gets executed
+io.on('connection', function(socket) {
+   console.log('A user connected');
+
+   //Whenever someone disconnects this piece of code executed
+   socket.on('disconnect', function () {
+      console.log('A user disconnected');
+   });
+});
+
 const getAllData = (result, item1, item2, item3, item4) => { //helper function to retrieve all needed data and store them in the result object
   result.user = item1.data;
   result.following = item2.data;
@@ -137,6 +149,6 @@ const getRecentDirectMsg = (result, data) => { // a helper function to grab rece
 };
 
 //create the server
-const server = app.listen(3000, () => {
+http.listen(3000, () => {
   console.log("The application is running on localhost:3000 !");
 }); //this will create a server

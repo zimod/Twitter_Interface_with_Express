@@ -18,5 +18,8 @@ block main
     include includes/timeline.pug
     include includes/following.pug
     include includes/directMsg.pug
+  script(src='/socket.io/socket.io.js')
+  script.
+    const socket = io();
   
   
